@@ -76,6 +76,7 @@ class PetList(Resource):
         pets.append(pet)
         return pet, 201
 
+
 @pet_ns.route('/<int:pet_id>')
 @pet_ns.response(404, 'Pet not found')
 @pet_ns.param('pet_id', 'The pet identifier')
@@ -88,6 +89,7 @@ class Pet(Resource):
         if pet is not None:
             return pet
         api.abort(404, f"Pet with ID {pet_id} not found")
+
 
 @pet_ns.route('/findByStatus')
 @pet_ns.param('status', 'The status of the pets to find')
@@ -102,7 +104,8 @@ class PetFindByStatus(Resource):
         if status:
             filtered_pets = [pet for pet in pets if pet['status'] == status]
             return filtered_pets
-        
+
+
 # Store Namespace
 @store_ns.route('/order')
 class OrderResource(Resource):
@@ -129,6 +132,7 @@ class OrderResource(Resource):
         order_data['id'] = order_id
         orders[order_id] = order_data
         return order_data, 201
+
 
 @store_ns.route('/order/<string:order_id>')
 @store_ns.response(404, 'Order not found')
@@ -163,8 +167,8 @@ class OrderUpdateResource(Resource):
         else:
             api.abort(400, f"Invalid status '{update_data['status']}'. Valid statuses are {', '.join(PET_STATUS)}")
 
-
         return {"message": "Order and pet status updated successfully"}
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5050)  # Must match base_url in api_helpers
